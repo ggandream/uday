@@ -3,7 +3,12 @@ import { Slide } from "../Slide/Slide.js";
 export const Gallery = ({ slides = [] }) => {
   const cards = slides
     .map((slide) =>
-      Slide({ children: slide.children, alt: slide.alt, url: slide.url }),
+      Slide({
+        children: slide.children,
+        alt: slide.alt,
+        url: slide.url,
+        attributes: { "data-date": slide.date },
+      }),
     )
     .join(" ");
 

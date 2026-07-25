@@ -1,4 +1,4 @@
-export const Slide = ({ children, alt = "", url = "", attributes }) => {
+export const Slide = ({ children, alt = "", url = "", attributes = {} }) => {
   const attr = Object.entries(attributes)
     .map(([attrK, attrV]) => {
       return `${attrK}:"${attrV}"`;

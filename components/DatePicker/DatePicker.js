@@ -1,8 +1,7 @@
 import { icons } from "../../icons/icon.js";
 
 export const DatePicker = () => {
-  return `<form action="#" method="post">
-                <div class="date">
+  return `<div class="date">
                 <button class="date__btn" type="button">
                   <span class="date__icon">${icons["calendar"] ?? ""}</span>
                 </button>
@@ -13,6 +12,5 @@ export const DatePicker = () => {
                     min="1995-06-20"
                     max="${new Date().toISOString().split("T")[0]}"
                 />
-                </div>
-         </form>`;
+          </div>`;
 };
