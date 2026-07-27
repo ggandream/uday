@@ -7,6 +7,8 @@ export const Gallery = ({ slides = [] }) => {
         children: slide.children,
         alt: slide.alt,
         url: slide.url,
+        media_type: slide.media_type,
+        thumbnail_url: slide.thumbnail_url,
         attributes: { "data-date": slide.date },
       }),
     )

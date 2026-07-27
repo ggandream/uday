@@ -59,6 +59,13 @@
   object-fit: cover;
 }
 
+.aside__video {
+  width: 100%;
+  flex-shrink: 0;
+  align-self: stretch;
+  aspect-ratio: 16/9;
+}
+
 .hide {
   transform: translate(calc(100% * 1.5), 0);
 }

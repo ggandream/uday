@@ -8,12 +8,17 @@ export function Hero({
   children = "",
   published,
 } = {}) {
-  const dateObj = new Date(published);
+  const dateObj = new Date(published + "T06:00:00.000Z");
   const date = dateObj.getDate();
   const month = dateObj.getMonth();
   const year = dateObj.getFullYear();
 
-  const publishedText = `Published on ${months[month]} ${String(date).padStart(2, "0")}, ${year}`;
+  // console.log(
+  //   "Temporal Now",
+  //   Temporal.Now.plainDateISO("America/Chicago").toString(),
+  // );
+
+  const publishedText = `Published on ${months[month]} ${String(date).padStart(2, "0")}, ${year} CST`;
 
   console.log(`Date: ${date}, Month: ${months[month]}, Year: ${year}`);
   return `<section class="hero">

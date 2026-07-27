@@ -17,10 +17,18 @@
   align-self: stretch;
   cursor: pointer;
   border: 2px solid transparent;
+  background-color: transparent;
 
   @media (min-width: 1440px) {
     gap: var(--space-xxs);
     width: 200px;
+  }
+
+  :focus-visible {
+    border: 2px dashed var(--font-color-brand);
+    .slide__title {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -29,6 +37,12 @@
   width: 100%;
   align-self: stretch;
   object-fit: cover;
+}
+
+.slide__video {
+  height: 119px;
+  width: 100%;
+  align-self: stretch;
 }
 
 @media (hover: hover) {

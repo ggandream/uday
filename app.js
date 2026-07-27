@@ -7,15 +7,23 @@ import { API_KEY } from "./config.js";
 const $main = document.querySelector("main");
 let myDate = new Date().toISOString().split("T")[0];
 const slides = [];
-const url = "https://api.nasa.gov/planetary/apod?";
+const urlNasa = "https://api.nasa.gov/planetary/apod?";
 
 const getData = async (date) => {
+  // console.log(new Intl.DateTimeFormat("en-US").format("date"));
+
+  if (!checkDate(date)) {
+    date = null;
+  }
   const params = new URLSearchParams();
   params.append("api_key", API_KEY);
-  params.append("date", date);
+  params.append("thumbs", true);
+  if (date !== null) {
+    params.append("date", date);
+  }
 
   try {
-    const response = await fetch(url + params);
+    const response = await fetch(urlNasa + params);
 
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
@@ -28,6 +36,11 @@ const getData = async (date) => {
   }
 };
 
+function checkDate(date) {
+  const dateObj = new Date(date);
+  return dateObj.toString() !== "Invalid Date";
+}
+
 function addDays(date, n) {
   const d = new Date(date);
   d.setDate(d.getDate() + n);
@@ -36,15 +49,19 @@ function addDays(date, n) {
 }
 
 const getDataGallery = async (date) => {
+  if (!checkDate(date)) {
+    date = new Date().toString().split("T")[0];
+  }
   const startDate = addDays(date, -3);
   const endDate = addDays(date, -1);
   const params = new URLSearchParams();
   params.append("api_key", API_KEY);
   params.append("start_date", startDate);
   params.append("end_date", endDate);
+  params.append("thumbs", true);
 
   try {
-    const response = await fetch(url + params);
+    const response = await fetch(urlNasa + params);
 
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
@@ -57,8 +74,12 @@ const getDataGallery = async (date) => {
   }
 };
 
-let dataf = await getData(myDate);
-let data2f = await getDataGallery(myDate);
+// let params = new URLSearchParams(document.location.search);
+const url = new URL(document.location.href);
+let date = url.searchParams.get("date");
+
+let dataf = await getData(date);
+let data2f = await getDataGallery(dataf.date);
 
 const render = (data1, data2) => {
   $main.innerHTML = "";
@@ -74,6 +95,8 @@ const render = (data1, data2) => {
       children: data2.date.slice(8, 10),
       alt: data2.title,
       url: data2.url,
+      media_type: data2.media_type,
+      thumbnail_url: data2.thumbnail_url,
       date: data2.date,
     });
   });
@@ -81,6 +104,7 @@ const render = (data1, data2) => {
   const aside = Aside({
     title: data1.title,
     url: data1.url,
+    media_type: data1.media_type,
     explanation: data1.explanation,
     copyright: data1.copyright,
   });
@@ -94,7 +118,7 @@ const render = (data1, data2) => {
 
   document.body.style.setProperty(
     "background-image",
-    `linear-gradient(rgba(10, 14, 26, 0.46), rgba(10, 14, 26, 0.46)), url("${data1.url}")`,
+    `linear-gradient(rgba(10, 14, 26, 0.46), rgba(10, 14, 26, 0.46)), url("${data1.thumbnail_url ? data1.thumbnail_url : data1.url}")`,
   );
 
   // Eventos y animaciones
@@ -105,6 +129,7 @@ const render = (data1, data2) => {
   const $showAside = document.querySelector('[data-action="show"]');
   const $closeAside = document.querySelector('[data-action="close"]');
   const $asideElement = document.querySelector(".aside");
+  const $gallery = document.querySelector(".gallery");
 
   $dateBtn.addEventListener("click", () => {
     try {
@@ -115,12 +140,17 @@ const render = (data1, data2) => {
   });
 
   $dateInput.addEventListener("change", async () => {
-    console.log($dateInput.value);
     myDate = $dateInput.value;
     dataf = await getData(myDate);
     data2f = await getDataGallery(myDate);
+
+    url.searchParams.set("date", myDate);
+    history.replaceState(null, "", url);
+
     render(dataf, data2f);
   });
+
+  $dateInput.value = dataf.date;
 
   $showAside.addEventListener("click", () => {
     $asideElement.classList.remove("hide");
@@ -130,6 +160,19 @@ const render = (data1, data2) => {
   $closeAside.addEventListener("click", () => {
     $asideElement.classList.remove("show");
     $asideElement.classList.add("hide");
+  });
+
+  $gallery.addEventListener("click", async (e) => {
+    if (e.target.matches(".slide, .slide__img, .slide__title")) {
+      console.log(e.target.closest(".slide").getAttribute("data-date"));
+      dataf = await getData(
+        e.target.closest(".slide").getAttribute("data-date"),
+      );
+      data2f = await getDataGallery(
+        e.target.closest(".slide").getAttribute("data-date"),
+      );
+      render(dataf, data2f);
+    }
   });
 };
 
