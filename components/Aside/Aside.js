@@ -1,3 +1,4 @@
+import { renderVideo } from "../../functions/renderVideo.js";
 import { Button } from "../Button/Button.js";
 import { Logo } from "../Logo/Logo.js";
 
@@ -11,11 +12,7 @@ export const Aside = ({
   let mediaElement = `<img src="${url}" alt="" class="aside__img" loading="lazy" />`;
 
   if (media_type === "video") {
-    mediaElement = `<iframe
-                          class="aside__video"
-                          title="${title}"
-                          src="${url}">
-                        </iframe>`;
+    mediaElement = renderVideo(url, title, "aside");
   }
 
   return `<aside class="aside hide">

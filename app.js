@@ -116,10 +116,17 @@ const render = (data1, data2) => {
   $main.insertAdjacentHTML("afterbegin", hero);
   $main.insertAdjacentHTML("afterbegin", nav);
 
-  document.body.style.setProperty(
-    "background-image",
-    `linear-gradient(rgba(10, 14, 26, 0.46), rgba(10, 14, 26, 0.46)), url("${data1.thumbnail_url ? data1.thumbnail_url : data1.url}")`,
-  );
+  if (data1.thumbnail_url === "" && data1.url.toLowerCase().includes("mp4")) {
+    document.body.style.setProperty(
+      "background-image",
+      `linear-gradient(rgba(10, 14, 26, 0.46), rgba(10, 14, 26, 0.46)), url('assets/Frame 1.png')`,
+    );
+  } else {
+    document.body.style.setProperty(
+      "background-image",
+      `linear-gradient(rgba(10, 14, 26, 0.46), rgba(10, 14, 26, 0.46)), url("${data1.thumbnail_url ? data1.thumbnail_url : data1.url}")`,
+    );
+  }
 
   // Eventos y animaciones
 

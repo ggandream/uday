@@ -42,7 +42,7 @@
 .slide__video {
   height: 119px;
   width: 100%;
-  align-self: stretch;
+  aspect-ratio: 16/9;
 }
 
 @media (hover: hover) {

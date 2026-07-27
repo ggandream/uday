@@ -1,3 +1,5 @@
+import { renderVideo } from "../../functions/renderVideo.js";
+
 export const Slide = ({
   children,
   alt = "",
@@ -12,16 +14,10 @@ export const Slide = ({
     })
     .join(" ");
 
-  console.log(`media type ${media_type}`);
-
   let mediaElement = `<img src="${thumbnail_url ? thumbnail_url : url}" alt="${alt}" class="slide__img" loading="lazy"/>`;
 
-  if (media_type === "video") {
-    mediaElement = `<iframe
-                          class="slide__video"
-                          title="${children}"
-                          src="${url}">
-                        </iframe>`;
+  if (media_type === "video" && thumbnail_url === "" && url.includes("mp4")) {
+    mediaElement = renderVideo(url, children, "slide");
   }
 
   return `<button type="button" class="slide" ${attr}>
