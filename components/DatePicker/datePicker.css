@@ -9,11 +9,41 @@
   flex-shrink: 0;
   border: 1px solid transparent;
   border-radius: var(--radius-radius-full);
-  background: var(--font-color-brand);
+  background: transparent;
   cursor: pointer;
+  z-index: 1;
+  position: relative;
+  overflow: hidden;
+}
 
-  @media (min-width: 1440px) {
-  }
+.date__btn::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: var(--font-color-brand);
+
+  border-radius: var(--radius-radius-full);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+
+  transition: transform 0.3s cubic-bezier(0.7, 0, 0.2, 1);
+  transform-origin: 100% 50%;
+}
+
+.date__btn::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+
+  background-color: var(--font-color-black);
+
+  border-radius: var(--radius-radius-full);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -2;
 }
 
 .date__input {
@@ -33,7 +63,32 @@
 }
 
 @media (hover: hover) {
+  .date__btn:hover::before {
+    transform: scale3d(0, 0.5, 1);
+    transform-origin: 0% 50%;
+  }
+
   .date__btn:hover {
-    border: 2px dashed var(--font-color-black);
+    span {
+      color: var(--font-color-brand);
+      animation:
+        jumpUpStart 0.2s forwards,
+        jumpUpEnd 0.2s forwards 0.2s;
+    }
+  }
+}
+
+@keyframes jumpUpStart {
+  to {
+    transform: translateY(-105%);
+  }
+}
+
+@keyframes jumpUpEnd {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
   }
 }
