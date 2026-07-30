@@ -37,6 +37,10 @@
   width: 100%;
   align-self: stretch;
   object-fit: cover;
+  background-image: url("../../assets/images/saturn.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .slide__video {

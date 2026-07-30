@@ -13,7 +13,8 @@ export const Button = ({
     .join(" ");
 
   return `<button type="button" class="btn btn--${variant}" aria-label="More information" ${attr}>
-        <span class="btn__text btn__text--${variant}">${children}</span>
+        <span><span class="btn__text btn__text--${variant}">${children}</span>
         ${icon ? `<span class="btn__icon">${icons[icon] ?? ""}</span>` : ""}
+        </span>
       </button>`;
 };

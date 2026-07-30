@@ -119,7 +119,7 @@ const render = (data1, data2) => {
   if (data1.thumbnail_url === "" && data1.url.toLowerCase().includes("mp4")) {
     document.body.style.setProperty(
       "background-image",
-      `linear-gradient(rgba(10, 14, 26, 0.46), rgba(10, 14, 26, 0.46)), url('assets/Frame 1.png')`,
+      `linear-gradient(rgba(10, 14, 26, 0.46), rgba(10, 14, 26, 0.46)), url('./assets/images/saturn.webp')`,
     );
   } else {
     document.body.style.setProperty(

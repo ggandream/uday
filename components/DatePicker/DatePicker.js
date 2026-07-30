@@ -3,7 +3,7 @@ import { icons } from "../../icons/icon.js";
 export const DatePicker = () => {
   return `<div class="date">
                 <button class="date__btn" type="button">
-                  <span class="date__icon">${icons["calendar"] ?? ""}</span>
+                  <span><span class="date__icon">${icons["calendar"] ?? ""}</span></span>
                 </button>
                 <input
                     type="date"

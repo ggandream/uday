@@ -14,7 +14,7 @@ export const Slide = ({
     })
     .join(" ");
 
-  let mediaElement = `<img src="${thumbnail_url ? thumbnail_url : url}" alt="${alt}" class="slide__img" loading="lazy"/>`;
+  let mediaElement = `<img src="${thumbnail_url ? thumbnail_url : url}" alt="${alt}" class="slide__img" loading="lazy" onerror="this.onerror=null; this.src='./assets/images/saturn.webp'"/>`;
 
   if (media_type === "video" && thumbnail_url === "" && url.includes("mp4")) {
     mediaElement = renderVideo(url, children, "slide");
