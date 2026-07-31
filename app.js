@@ -8,10 +8,13 @@ const $main = document.querySelector("main");
 let myDate = new Date().toISOString().split("T")[0];
 const slides = [];
 const urlNasa = "https://api.nasa.gov/planetary/apod?";
+const STORAGE_KEY = "days-saved";
+
+const getDaysSaved = () => {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+};
 
 const getData = async (date) => {
-  // console.log(new Intl.DateTimeFormat("en-US").format("date"));
-
   if (!checkDate(date)) {
     date = null;
   }
@@ -82,6 +85,22 @@ let dataf = await getData(date);
 let data2f = await getDataGallery(dataf.date);
 
 const render = (data1, data2) => {
+  const saved = getDaysSaved();
+  const itemIsSaved = saved.some((item) => item.date === String(data1.date));
+  console.log(itemIsSaved);
+  let arraySaved;
+  if (!itemIsSaved) {
+    arraySaved = [...saved, data1];
+  } else {
+    arraySaved = [...saved];
+  }
+
+  if (saved.length > 5) {
+    arraySaved = [...saved.slice(-5)];
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arraySaved));
+
   $main.innerHTML = "";
   slides.length = 0;
   const hero = Hero({
@@ -184,38 +203,3 @@ const render = (data1, data2) => {
 };
 
 render(dataf, data2f);
-
-// // Eventos y animaciones
-
-// const $dateInput = document.querySelector('input[name="date__input"]');
-// const $dateBtn = document.querySelector(".date__btn");
-
-// const $showAside = document.querySelector('[data-action="show"]');
-// const $closeAside = document.querySelector('[data-action="close"]');
-// const $asideElement = document.querySelector(".aside");
-
-// $dateBtn.addEventListener("click", () => {
-//   try {
-//     $dateInput.showPicker();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
-// $dateInput.addEventListener("change", async () => {
-//   console.log($dateInput.value);
-//   myDate = $dateInput.value;
-//   dataf = await getData(myDate);
-//   data2f = await getDataGallery(myDate);
-//   render(dataf, data2f);
-// });
-
-// $showAside.addEventListener("click", () => {
-//   $asideElement.classList.remove("hide");
-//   $asideElement.classList.add("show");
-// });
-
-// $closeAside.addEventListener("click", () => {
-//   $asideElement.classList.remove("show");
-//   $asideElement.classList.add("hide");
-// });
