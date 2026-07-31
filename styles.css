@@ -113,3 +113,33 @@ main {
     background-position: left;
   }
 }
+
+.skeleton {
+  background: linear-gradient(90deg, #1f2430 25%, #2b3242 50%, #1f2430 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+  border-radius: 0.5rem;
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton--hero {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+.skeleton--linea {
+  height: 1rem;
+  margin-block: 0.5rem;
+}
+.skeleton--linea:last-child {
+  width: 60%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
