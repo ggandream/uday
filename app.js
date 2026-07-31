@@ -15,6 +15,7 @@ const getDaysSaved = () => {
 };
 
 const getData = async (date) => {
+  let result = "";
   if (!checkDate(date)) {
     date = null;
   }
@@ -25,18 +26,36 @@ const getData = async (date) => {
     params.append("date", date);
   }
 
+  const saved = getDaysSaved();
+  const itemIsSaved = saved.find((item) => item.date === String(date));
+
+  let arraySaved;
+
   try {
-    const response = await fetch(urlNasa + params);
+    if (!itemIsSaved) {
+      const response = await fetch(urlNasa + params);
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      result = await response.json();
+      arraySaved = [...saved, result];
+    } else {
+      arraySaved = [...saved];
+      result = itemIsSaved;
     }
-
-    const result = await response.json();
-    return result;
   } catch (error) {
     console.log(error.message);
   }
+
+  if (arraySaved.length > 5) {
+    arraySaved = [...arraySaved.slice(-5)];
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arraySaved));
+
+  return result;
 };
 
 function checkDate(date) {
@@ -85,21 +104,22 @@ let dataf = await getData(date);
 let data2f = await getDataGallery(dataf.date);
 
 const render = (data1, data2) => {
-  const saved = getDaysSaved();
-  const itemIsSaved = saved.some((item) => item.date === String(data1.date));
-  console.log(itemIsSaved);
-  let arraySaved;
-  if (!itemIsSaved) {
-    arraySaved = [...saved, data1];
-  } else {
-    arraySaved = [...saved];
-  }
+  // const saved = getDaysSaved();
+  // const itemIsSaved = saved.some((item) => item.date === String(data1.date));
 
-  if (saved.length > 5) {
-    arraySaved = [...saved.slice(-5)];
-  }
+  // let arraySaved;
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(arraySaved));
+  // if (!itemIsSaved) {
+  //   arraySaved = [...saved, data1];
+  // } else {
+  //   arraySaved = [...saved];
+  // }
+
+  // if (arraySaved.length > 5) {
+  //   arraySaved = [...arraySaved.slice(-5)];
+  // }
+
+  // localStorage.setItem(STORAGE_KEY, JSON.stringify(arraySaved));
 
   $main.innerHTML = "";
   slides.length = 0;
