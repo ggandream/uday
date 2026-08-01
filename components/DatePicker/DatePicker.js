@@ -2,7 +2,7 @@ import { icons } from "../../icons/icon.js";
 
 export const DatePicker = () => {
   return `<div class="date">
-                <button class="date__btn" type="button">
+                <button class="date__btn" type="button" aria-label="Choose a date">
                   <span><span class="date__icon">${icons["calendar"] ?? ""}</span></span>
                 </button>
                 <input

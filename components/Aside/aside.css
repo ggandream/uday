@@ -69,8 +69,10 @@
 
 .hide {
   transform: translate(calc(100% * 1.5), 0);
+  visibility: hidden;
 }
 
 .show {
   transform: translate(0, 0);
+  visibility: visible;
 }
