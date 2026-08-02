@@ -9,12 +9,13 @@ export const Gallery = ({ slides = [] }) => {
         url: slide.url,
         media_type: slide.media_type,
         thumbnail_url: slide.thumbnail_url,
-        attributes: { "data-date": slide.date },
+        iso_date: slide.iso_date,
+        href: slide.href,
       }),
     )
     .join(" ");
 
-  return `<section class="gallery">
+  return `<section class="gallery" aria-label="Previous days">
           <div class="slide__container">
           ${cards}
           </div>

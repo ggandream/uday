@@ -23,6 +23,16 @@ export function Hero({
             </div>
             ${Text({ variant: "secondary", children: publishedText })}
             </article>
-            ${Button({ variant: "primary", icon: "arrow", children: "More", attributes: { "data-action": "show" } })}
+            ${Button({
+              variant: "primary",
+              icon: "arrow",
+              children: "More",
+              attributes: {
+                "data-action": "show",
+                command: "show-modal",
+                commandfor: "dinamic-aside",
+                "aria-label": "More information",
+              },
+            })}
           </section>`;
 }

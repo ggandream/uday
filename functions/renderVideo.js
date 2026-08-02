@@ -1,6 +1,6 @@
 export const renderVideo = (url, title, block_css) => {
   if (url.lastIndexOf("mp4") && !url.includes("youtube")) {
-    return `<video class="${block_css}__video" src="${url}" ${block_css === "slide" ? ` autoplay muted loop ` : ` controls `}  playsinline
+    return `<video title="${title}"  class="${block_css}__video" src="${url}" ${block_css === "slide" ? ` autoplay muted loop ` : ` controls `}  playsinline
              
               preload="metadata"></video>`;
   }

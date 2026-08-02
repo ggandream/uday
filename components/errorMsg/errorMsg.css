@@ -1,0 +1,17 @@
+.error {
+  width: 50%;
+  height: fit-content;
+
+  background-color: pink;
+  border: 2px solid crimson;
+  border-radius: var(--font-size-copy-s);
+
+  color: var(--font-color-black);
+  font-family: var(--font-body);
+
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 28px;
+  font-size: var(--font-size-copy-s);
+  text-align: center;
+}

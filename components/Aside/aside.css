@@ -1,27 +1,47 @@
 .aside {
-  display: flex;
-  width: 100%;
-  height: 100%;
+  margin: 0;
+  background-color: var(--font-color-black);
   padding: var(--space-s) var(--space-l);
+  transform: translate(calc(100% * 1.5), 0);
+  transition:
+    transform 0.75s ease,
+    display 0.75s allow-discrete;
+}
+
+.aside:modal {
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-m);
+  width: 100%;
+  height: 100%;
 
-  background: var(--font-color-black);
+  max-width: 100dvw;
+  max-height: 100dvh;
+
+  gap: var(--space-m);
 
   overflow-y: scroll;
 
   position: fixed;
   top: 0;
   right: 0;
-  transition: transform 0.5s ease;
+  transform: translate(0, 0);
   z-index: 5;
 
   @media (min-width: 1440px) {
+    transform: translate(46%, 0);
     width: 70%;
     right: 0;
+    max-width: calc(100% - 2em - 6px);
+    max-height: 100dvh;
     padding: var(--font-size-display-l) var(--space-xxxl);
     gap: var(--space-l);
+  }
+}
+
+@starting-style {
+  .aside:modal {
+    transform: translate(calc(100% * 1.5), 0);
   }
 }
 
@@ -65,14 +85,4 @@
   flex-shrink: 0;
   align-self: stretch;
   aspect-ratio: 16/9;
-}
-
-.hide {
-  transform: translate(calc(100% * 1.5), 0);
-  visibility: hidden;
-}
-
-.show {
-  transform: translate(0, 0);
-  visibility: visible;
 }

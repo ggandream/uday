@@ -9,20 +9,25 @@ export const Aside = ({
   copyright,
   media_type = "image",
 }) => {
-  let mediaElement = `<img src="${url}" alt="" class="aside__img" loading="lazy" />`;
+  let mediaElement = `<img src="${url}" class="aside__img" loading="lazy" alt="${title}" />`;
 
   if (media_type === "video") {
     mediaElement = renderVideo(url, title, "aside");
   }
 
-  return `<aside class="aside hide">
+  return `<dialog class="aside" id="dinamic-aside" aria-labelledby="aside-title">
         <header class="aside__header">
         ${Logo()}
         ${Button({
           variant: "secondary",
           icon: "x",
           children: "Close",
-          attributes: { "data-action": "close" },
+          attributes: {
+            "data-action": "close",
+            command: "close",
+            commandfor: "dinamic-aside",
+            "aria-label": "Close",
+          },
         })}
         </header>
         ${mediaElement}
@@ -34,5 +39,5 @@ export const Aside = ({
         <p class="aside__text">
         ${explanation}
         </p>
-      </aside>`;
+      </dialog>`;
 };

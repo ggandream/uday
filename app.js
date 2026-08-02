@@ -3,6 +3,7 @@ import { Nav } from "./components/Nav/Nav.js";
 import { Gallery } from "./components/Gallery/Gallery.js";
 import { Aside } from "./components/Aside/Aside.js";
 import { API_KEY } from "./config.js";
+import { ErrorMsg } from "./components/errorMsg/ErrorMsg.js";
 
 const $main = document.querySelector("main");
 let myDate = new Date().toISOString().split("T")[0];
@@ -29,11 +30,12 @@ const getData = async (date) => {
   const saved = getDaysSaved();
   const itemIsSaved = saved.find((item) => item.date === String(date));
 
-  let arraySaved;
+  let arraySaved = [];
 
   try {
+    let response = "";
     if (!itemIsSaved) {
-      const response = await fetch(urlNasa + params);
+      response = await fetch(urlNasa + params);
 
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
@@ -45,8 +47,32 @@ const getData = async (date) => {
       arraySaved = [...saved];
       result = itemIsSaved;
     }
+
+    if (!response.ok) {
+      switch (response.status) {
+        case 404:
+          throw new Error(
+            "404 - The server can’t find the requested resource.",
+          );
+        case 401:
+          throw new Error(
+            "401 - The server rejected your request due to missing or invalid authentication. ",
+          );
+        case 403:
+          throw new Error(
+            "403 - The server understood your request but denied access.",
+          );
+        case 500:
+          throw new Error(
+            "500 - Generic error. The server hit an unexpected problem that prevented it from completing the request. Try later!",
+          );
+        default:
+          throw new Error(`Error HTTP: ${response.status}`);
+      }
+    }
   } catch (error) {
-    console.log(error.message);
+    const errorMsg = ErrorMsg({ children: error.message });
+    $main.innerHTML = errorMsg;
   }
 
   if (arraySaved.length > 5) {
@@ -104,24 +130,8 @@ let dataf = await getData(date);
 let data2f = await getDataGallery(dataf.date);
 
 const render = (data1, data2) => {
-  // const saved = getDaysSaved();
-  // const itemIsSaved = saved.some((item) => item.date === String(data1.date));
-
-  // let arraySaved;
-
-  // if (!itemIsSaved) {
-  //   arraySaved = [...saved, data1];
-  // } else {
-  //   arraySaved = [...saved];
-  // }
-
-  // if (arraySaved.length > 5) {
-  //   arraySaved = [...arraySaved.slice(-5)];
-  // }
-
-  // localStorage.setItem(STORAGE_KEY, JSON.stringify(arraySaved));
-
   $main.innerHTML = "";
+
   slides.length = 0;
   const hero = Hero({
     title: data1.title,
@@ -136,7 +146,8 @@ const render = (data1, data2) => {
       url: data2.url,
       media_type: data2.media_type,
       thumbnail_url: data2.thumbnail_url,
-      date: data2.date,
+      iso_date: data2.date,
+      href: url,
     });
   });
 
@@ -154,6 +165,9 @@ const render = (data1, data2) => {
   $main.insertAdjacentHTML("afterbegin", aside);
   $main.insertAdjacentHTML("afterbegin", hero);
   $main.insertAdjacentHTML("afterbegin", nav);
+
+  const $title = $main.querySelector(".hero .title");
+  $title.focus();
 
   if (data1.thumbnail_url === "" && data1.url.toLowerCase().includes("mp4")) {
     document.body.style.setProperty(
@@ -198,15 +212,10 @@ const render = (data1, data2) => {
 
   $dateInput.value = dataf.date;
 
-  $showAside.addEventListener("click", () => {
-    $asideElement.classList.remove("hide");
-    $asideElement.classList.add("show");
-  });
-
-  $closeAside.addEventListener("click", () => {
-    $asideElement.classList.remove("show");
-    $asideElement.classList.add("hide");
-  });
+  if (!("command" in HTMLButtonElement.prototype)) {
+    $showAside.addEventListener("click", () => $asideElement.showModal());
+    $closeAside.addEventListener("click", () => $asideElement.close());
+  }
 
   $gallery.addEventListener("click", async (e) => {
     if (e.target.matches(".slide, .slide__img, .slide__title")) {
@@ -218,6 +227,7 @@ const render = (data1, data2) => {
         e.target.closest(".slide").getAttribute("data-date"),
       );
       render(dataf, data2f);
+      history.replaceState(null, "", url);
     }
   });
 };
