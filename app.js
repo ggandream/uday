@@ -66,13 +66,18 @@ const getData = async (date) => {
           throw new Error(
             "500 - Generic error. The server hit an unexpected problem that prevented it from completing the request. Try later!",
           );
+
         default:
           throw new Error(`Error HTTP: ${response.status}`);
       }
     }
   } catch (error) {
     const errorMsg = ErrorMsg({ children: error.message });
-    $main.innerHTML = errorMsg;
+    if (error === undefined) {
+      $main.innerHTML = `<div class="loader" role="status"></div>`;
+    } else {
+      $main.innerHTML = errorMsg;
+    }
   }
 
   if (arraySaved.length > 5) {
