@@ -18,6 +18,7 @@ export const DatePicker = () => {
                   <span><span class="date__icon" aria-hidden="true" focusable="false">${icons["calendar"] ?? ""}</span></span>
                 </button>
                 <input
+                tabindex="-1"
                     type="date"
                     class="date__input"
                     name="date__input"
