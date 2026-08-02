@@ -31,9 +31,8 @@ const getData = async (date) => {
   const itemIsSaved = saved.find((item) => item.date === String(date));
 
   let arraySaved = [];
-
+  let response = "";
   try {
-    let response = "";
     if (!itemIsSaved) {
       response = await fetch(urlNasa + params);
 
@@ -73,7 +72,7 @@ const getData = async (date) => {
     }
   } catch (error) {
     const errorMsg = ErrorMsg({ children: error.message });
-    if (error.status === undefined) {
+    if (response.status === undefined) {
       $main.innerHTML = `<div class="loader" role="status"></div>`;
     } else {
       $main.innerHTML = errorMsg;
