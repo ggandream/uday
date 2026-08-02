@@ -73,7 +73,7 @@ const getData = async (date) => {
     }
   } catch (error) {
     const errorMsg = ErrorMsg({ children: error.message });
-    if (error === undefined) {
+    if (error.message === undefined) {
       $main.innerHTML = `<div class="loader" role="status"></div>`;
     } else {
       $main.innerHTML = errorMsg;
