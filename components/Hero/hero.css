@@ -24,7 +24,12 @@
 
 .card__body {
   display: flex;
+
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+
+  @media (min-width: 1024px) {
+    width: 60%;
+  }
 }
