@@ -10,9 +10,14 @@ let myDate = new Date().toISOString().split("T")[0];
 const slides = [];
 const urlNasa = "https://api.nasa.gov/planetary/apod?";
 const STORAGE_KEY = "days-saved";
+const STORAGE_KEY2 = "gallery_saved";
 
-const getDaysSaved = () => {
+const getSavedDays = () => {
   return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+};
+
+const getSavedGalleryDays = () => {
+  return JSON.parse(sessionStorage.getItem(STORAGE_KEY2) || "[]");
 };
 
 const getData = async (date) => {
@@ -27,9 +32,8 @@ const getData = async (date) => {
     params.append("date", date);
   }
 
-  const saved = getDaysSaved();
+  const saved = getSavedDays();
   const itemIsSaved = saved.find((item) => item.date === String(date));
-  console.log(itemIsSaved);
 
   let arraySaved = [];
   let response = "";
@@ -66,6 +70,10 @@ const getData = async (date) => {
         case 500:
           throw new Error(
             "500 - Generic error. The server hit an unexpected problem that prevented it from completing the request. Try later!",
+          );
+        case 503:
+          throw new Error(
+            "503 - The server is busy, down for maintenance, or overloaded with too many visitors",
           );
       }
     }
@@ -107,18 +115,38 @@ const getDataGallery = async (date) => {
   params.append("end_date", endDate);
   params.append("thumbs", true);
 
+  const saved = getSavedGalleryDays(); //obtener el string de session storage
+
+  const daysRange = saved.find(
+    (group) => group.some((day) => day.date === startDate), //Obtener el grupo que empieza por StartDate
+  );
+
+  let arraySaved = [];
+  let result;
   try {
-    const response = await fetch(urlNasa + params);
+    if (!daysRange) {
+      const response = await fetch(urlNasa + params);
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+      sessionStorage.setItem(STORAGE_KEY2, JSON.stringify(response));
+      console.log("Guardando", JSON.stringify(response));
+
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      result = await response.json();
+
+      arraySaved = [...saved, result];
+    } else {
+      arraySaved = [...saved];
+      result = daysRange;
     }
-
-    const result = await response.json();
-    return result;
   } catch (error) {
     console.log(error);
   }
+
+  sessionStorage.setItem(STORAGE_KEY2, JSON.stringify(arraySaved));
+  return result;
 };
 
 // let params = new URLSearchParams(document.location.search);
@@ -155,7 +183,8 @@ const appendEvent = () => {
     url.searchParams.set("date", myDate);
     history.pushState(null, "", url);
 
-    render(dataf, data2f);
+    renderHero(dataf);
+    renderGallery(data2f);
   });
 
   $dateInput.value = dataf.date;
@@ -173,7 +202,7 @@ const appendEvent = () => {
   }
 };
 
-const render = (data1, data2) => {
+const renderHero = (data1) => {
   $main.innerHTML = "";
 
   slides.length = 0;
@@ -183,18 +212,6 @@ const render = (data1, data2) => {
     published: data1.date,
   });
 
-  Array.from(data2).forEach((data2) => {
-    slides.push({
-      children: data2.date.slice(8, 10),
-      alt: data2.title,
-      url: data2.url,
-      media_type: data2.media_type,
-      thumbnail_url: data2.thumbnail_url,
-      iso_date: data2.date,
-      href: url,
-    });
-  });
-
   const aside = Aside({
     title: data1.title,
     url: data1.url,
@@ -202,10 +219,9 @@ const render = (data1, data2) => {
     explanation: data1.explanation,
     copyright: data1.copyright,
   });
-  const gallery = Gallery({ slides });
+
   const nav = Nav();
 
-  $main.insertAdjacentHTML("beforeend", gallery);
   $main.insertAdjacentHTML("afterbegin", aside);
   $main.insertAdjacentHTML("afterbegin", hero);
   $main.insertAdjacentHTML("afterbegin", nav);
@@ -228,16 +244,34 @@ const render = (data1, data2) => {
   appendEvent();
 };
 
-render(dataf, data2f);
+const renderGallery = (data) => {
+  Array.from(data).forEach((data) => {
+    slides.push({
+      children: data.date.slice(8, 10),
+      alt: data.title,
+      url: data.url,
+      media_type: data.media_type,
+      thumbnail_url: data.thumbnail_url,
+      iso_date: data.date,
+      href: url,
+    });
+  });
+
+  const gallery = Gallery({ slides });
+
+  $main.insertAdjacentHTML("beforeend", gallery);
+};
+
+renderHero(dataf);
+renderGallery(data2f);
 
 addEventListener("popstate", async () => {
   const urlPop = new URL(document.location.href);
   myDate = urlPop.searchParams.get("date");
 
-  console.log(`date in pop ${myDate}`);
-
   dataf = await getData(myDate); //Fetch background
   data2f = await getDataGallery(myDate); //fetch gallery
 
-  render(dataf, data2f);
+  renderHero(dataf);
+  renderGallery(data2f);
 });
