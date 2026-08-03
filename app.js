@@ -29,11 +29,13 @@ const getData = async (date) => {
 
   const saved = getDaysSaved();
   const itemIsSaved = saved.find((item) => item.date === String(date));
+  console.log(itemIsSaved);
 
   let arraySaved = [];
   let response = "";
   try {
     if (!itemIsSaved) {
+      $main.innerHTML = `<div class="loader" role="status"></div>`;
       response = await fetch(urlNasa + params);
 
       if (!response.ok) {
@@ -65,18 +67,11 @@ const getData = async (date) => {
           throw new Error(
             "500 - Generic error. The server hit an unexpected problem that prevented it from completing the request. Try later!",
           );
-
-        default:
-          throw new Error(`Error HTTP: ${response.status}`);
       }
     }
-  } catch (error) {
-    const errorMsg = ErrorMsg({ children: error.message });
-    if (response.status === undefined) {
-      $main.innerHTML = `<div class="loader" role="status"></div>`;
-    } else {
-      $main.innerHTML = errorMsg;
-    }
+  } catch (e) {
+    const errorMsg = ErrorMsg({ children: e.name + ": " + e.message });
+    $main.innerHTML = errorMsg;
   }
 
   if (arraySaved.length > 5) {
@@ -130,8 +125,53 @@ const getDataGallery = async (date) => {
 const url = new URL(document.location.href);
 let date = url.searchParams.get("date");
 
-let dataf = await getData(date);
+let dataf = await getData(date); //
 let data2f = await getDataGallery(dataf.date);
+
+const appendEvent = () => {
+  // Eventos y animaciones
+
+  const $dateInput = document.querySelector('input[name="date__input"]');
+  const $dateBtn = document.querySelector(".date__btn");
+
+  const $showAside = document.querySelector('[data-action="show"]');
+  const $closeAside = document.querySelector('[data-action="close"]');
+  const $asideElement = document.querySelector(".aside");
+
+  $dateBtn.addEventListener("click", () => {
+    try {
+      $dateInput.showPicker();
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  //DatePicker - input date
+  $dateInput.addEventListener("change", async () => {
+    myDate = $dateInput.value;
+    dataf = await getData(myDate); //Fetch background
+    data2f = await getDataGallery(myDate); //fetch gallery
+
+    url.searchParams.set("date", myDate);
+    history.pushState(null, "", url);
+
+    render(dataf, data2f);
+  });
+
+  $dateInput.value = dataf.date;
+
+  if (!("command" in HTMLButtonElement.prototype)) {
+    $showAside.addEventListener("click", () => $asideElement.showModal());
+    $closeAside.addEventListener("click", () => $asideElement.close());
+  }
+
+  if (!("closedby" in HTMLDialogElement.prototype)) {
+    $asideElement.addEventListener("click", (e) => {
+      console.log(e.target);
+      if (e.target === $asideElement) $asideElement.close();
+    });
+  }
+};
 
 const render = (data1, data2) => {
   $main.innerHTML = "";
@@ -185,55 +225,19 @@ const render = (data1, data2) => {
     );
   }
 
-  // Eventos y animaciones
-
-  const $dateInput = document.querySelector('input[name="date__input"]');
-  const $dateBtn = document.querySelector(".date__btn");
-
-  const $showAside = document.querySelector('[data-action="show"]');
-  const $closeAside = document.querySelector('[data-action="close"]');
-  const $asideElement = document.querySelector(".aside");
-  const $gallery = document.querySelector(".gallery");
-
-  $dateBtn.addEventListener("click", () => {
-    try {
-      $dateInput.showPicker();
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
-  $dateInput.addEventListener("change", async () => {
-    myDate = $dateInput.value;
-    dataf = await getData(myDate);
-    data2f = await getDataGallery(myDate);
-
-    url.searchParams.set("date", myDate);
-    history.replaceState(null, "", url);
-
-    render(dataf, data2f);
-  });
-
-  $dateInput.value = dataf.date;
-
-  if (!("command" in HTMLButtonElement.prototype)) {
-    $showAside.addEventListener("click", () => $asideElement.showModal());
-    $closeAside.addEventListener("click", () => $asideElement.close());
-  }
-
-  $gallery.addEventListener("click", async (e) => {
-    if (e.target.matches(".slide, .slide__img, .slide__title")) {
-      console.log(e.target.closest(".slide").getAttribute("data-date"));
-      dataf = await getData(
-        e.target.closest(".slide").getAttribute("data-date"),
-      );
-      data2f = await getDataGallery(
-        e.target.closest(".slide").getAttribute("data-date"),
-      );
-      render(dataf, data2f);
-      history.replaceState(null, "", url);
-    }
-  });
+  appendEvent();
 };
 
 render(dataf, data2f);
+
+addEventListener("popstate", async () => {
+  const urlPop = new URL(document.location.href);
+  myDate = urlPop.searchParams.get("date");
+
+  console.log(`date in pop ${myDate}`);
+
+  dataf = await getData(myDate); //Fetch background
+  data2f = await getDataGallery(myDate); //fetch gallery
+
+  render(dataf, data2f);
+});

@@ -15,7 +15,7 @@ export const Aside = ({
     mediaElement = renderVideo(url, title, "aside");
   }
 
-  return `<dialog class="aside" id="dinamic-aside" aria-labelledby="aside-title">
+  return `<dialog class="aside" id="dinamic-aside" aria-labelledby="aside-title" closedby="any" >
         <header class="aside__header">
         ${Logo()}
         ${Button({

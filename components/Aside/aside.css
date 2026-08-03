@@ -5,7 +5,8 @@
   transform: translate(calc(100% * 1.5), 0);
   transition:
     transform 0.75s ease,
-    display 0.75s allow-discrete;
+    display 0.75s allow-discrete,
+    overlay 0.75s allow-discrete;
 }
 
 .aside:modal {
@@ -26,7 +27,6 @@
   top: 0;
   right: 0;
   transform: translate(0, 0);
-  z-index: 5;
 
   @media (min-width: 1440px) {
     transform: translate(46%, 0);
