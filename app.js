@@ -128,7 +128,6 @@ const getDataGallery = async (date) => {
       const response = await fetch(urlNasa + params);
 
       sessionStorage.setItem(STORAGE_KEY2, JSON.stringify(response));
-      console.log("Guardando", JSON.stringify(response));
 
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
