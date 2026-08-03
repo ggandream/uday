@@ -120,4 +120,4 @@ npm run lint:fix  # check and autofix
 
 ## License
 
-[MIT](LICENSE) © Andrea
+© Build by Andrea Garrido, design by Luis Granados.
