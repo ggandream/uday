@@ -64,6 +64,10 @@
   left: 0;
 }
 
+.date__icon {
+  color: var(--font-color-black);
+}
+
 .date {
   position: relative;
 }
