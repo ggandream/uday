@@ -9,7 +9,7 @@ Built with vanilla JavaScript, no framework, no bundler, no build step.
 
 ### Screenshot
 
-![Screenshot of UDay](.assets/images/screenshot.png)
+![Screenshot of UDay](./assets/images/screenshot.png)
 
 ## Features
 
