@@ -165,7 +165,7 @@ const appendEvent = () => {
 
   $dateBtn.addEventListener("click", () => {
     try {
-      if ("showPicker" in HTMLInputElement.prototype) {
+      if (HTMLInputElement.prototype.showPicker) {
         $dateInput.showPicker();
       } else {
         $dateInput.click();
