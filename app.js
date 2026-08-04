@@ -127,8 +127,6 @@ const getDataGallery = async (date) => {
     if (!daysRange) {
       const response = await fetch(urlNasa + params);
 
-      sessionStorage.setItem(STORAGE_KEY2, JSON.stringify(response));
-
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -167,7 +165,11 @@ const appendEvent = () => {
 
   $dateBtn.addEventListener("click", () => {
     try {
-      $dateInput.showPicker();
+      if ("showPicker" in HTMLInputElement.prototype) {
+        $dateInput.showPicker();
+      } else {
+        $dateInput.click();
+      }
     } catch (error) {
       console.log(error);
     }
