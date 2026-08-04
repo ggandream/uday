@@ -1,12 +1,15 @@
 # UDay
-![Screenshot](./assets/images/MacBook Neo mockup blush portrait.png)
-
 A webpage that shows a different image of our universe each day, along with a brief
 explanation written by a professional astronomer, using [NASA's APOD API](https://api.nasa.gov/#apod).
 
 **Live demo:** https://ggandream.github.io/uday/
 
 Built with vanilla JavaScript, no framework, no bundler, no build step.
+
+
+### Screenshot
+
+![Screenshot of UDay](.assets/images/screenshot.png)
 
 ## Features
 
