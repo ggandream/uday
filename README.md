@@ -14,16 +14,16 @@ Built with vanilla JavaScript, no framework, no bundler, no build step.
 ## Features
 
 - **Picture of the day** as a full-bleed background, with title, explanation and publication date.
-- **Date navigation** — pick any date between `1995-06-20` (the first APOD) and today.
+- **Date navigation**: pick any date between `1995-06-20` (the first APOD) and today.
 - **Gallery** of the three previous days; each thumbnail links to that day.
-- **Deep links & history** — the selected day lives in the URL (`?date=YYYY-MM-DD`), so
+- **Deep links & history**: the selected day lives in the URL (`?date=YYYY-MM-DD`), so
   back/forward and sharing work.
-- **Video support** — MP4 files are rendered as `<video>`, YouTube links as an `<iframe>`.
+- **Video support**: MP4 files are rendered as `<video>`, YouTube links as an `<iframe>`.
 - **Detail dialog** with the full-resolution media, explanation and copyright.
-- **Caching** — recent days are stored in the browser so revisiting a date costs no API call.
-- **Accessibility** — focus management on navigation, `role="alert"` errors, labelled
+- **Caching**: recent days are stored in the browser so revisiting a date costs no API call.
+- **Accessibility**: focus management on navigation, `role="alert"` errors, labelled
   controls and a visible focus ring.
-- **Progressive enhancement** — uses the native `command`/`commandfor` and `closedby`
+- **Progressive enhancement**: uses the native `command`/`commandfor` and `closedby`
   dialog APIs, falling back to event listeners where unsupported.
 
 ## Getting started
@@ -43,7 +43,7 @@ export const API_KEY = "your-api-key-here";
 
 ### 3. Serve the project
 
-The app uses ES modules and `fetch()` for the SVG icons, so it must be served over HTTP —
+The app uses ES modules and `fetch()` for the SVG icons, so it must be served over HTTP,
 opening `index.html` from the filesystem will not work.
 
 ```bash
@@ -67,8 +67,6 @@ app.js              Data fetching, caching, routing, rendering and event wiring
 config.js           NASA API key
 styles.css          Design tokens (CSS custom properties), reset, body and loader
 months.json         Month names used to format dates
-data.json           Sample APOD response (single day), for reference
-data2.json          Sample APOD response (date range), for reference
 
 components/         One folder per component: <Name>.js + <name>.css
   Aside/            Detail dialog with full media and explanation
